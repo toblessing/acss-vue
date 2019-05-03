@@ -88,8 +88,7 @@
          **sendData:**
         ```json
         {
-            "schoolname":"",
-            ....
+            "schoolname":""
         }
         ```
         **resultData:**
@@ -133,6 +132,7 @@
 
     * ### **API** /add/{entity}
         添加一个或多个实体，将要添加的实体放入`entityList`中，并未返回添加后的对应实体列表，`{entity}` 表示要添加的实体类名称
+
          **methed:** POST    
 
          **sendData:**
