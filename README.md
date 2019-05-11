@@ -166,7 +166,8 @@
          **sendData:**
         ```json
         {
-
+            "id":"",
+            "name":""
         }
         ```
         **resultData:**
