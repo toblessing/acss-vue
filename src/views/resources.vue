@@ -20,6 +20,14 @@
           <template slot="title">
             <Icon type="ios-navigate"></Icon>院系
           </template>
+          
+                  <MenuItem
+                    :name="'1-'+treeData.departments.lenght"
+                  >
+                  
+                  <Button :style="{width: '100%'}" @click.stop="null" type="dashed">+</Button>
+                  
+                  </MenuItem>
 
           <template v-for="(depa,index) in treeData.departments">
             <Submenu :key="[depa,index]" :name="'1-'+index">
@@ -71,6 +79,7 @@
               </Submenu>
             </Submenu>
           </template>
+          
         </Submenu>
 
         <!-- 固定菜单校区 -->
