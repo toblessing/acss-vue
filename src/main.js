@@ -6,13 +6,15 @@ import store from './store'
 import router from './router'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import Axios from 'axios'
 
+Vue.use(Axios)
 Vue.use(VueRouter);
 Vue.use(VueRouter);
 Vue.use(iView);
 
 
-Vue.config.productionTip = false
+Vue.config.productionTip = true
 
 new Vue({
   store,
