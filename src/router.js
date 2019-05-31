@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from './views/home'
+import home from './views/home.vue'
 import arranging from './views/arranging'
 import autoArranging from './views/autoArranging'
 import show from './views/show'
