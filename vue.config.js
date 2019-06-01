@@ -2,7 +2,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://acss311.herokuapp.com',
+                target: 'http://acsstest.herokuapp.com:80',
                 
                 changeOrigin: true,
                 secure:false,

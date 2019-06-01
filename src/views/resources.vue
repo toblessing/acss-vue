@@ -11,23 +11,68 @@
 }
 </style>
 
+<script>
+import Axios from "axios";
+var vue = {
+  data() {
+    return {
+      users: "",
+      treeData: {},
+      isInitData: false
+    };
+  },
+  methods: {
+    addDepartment() {},
+    addClazz() {},
+    addCourse() {},
+    addTeache() {},
+    addArea() {},
+    addBuiding() {},
+    addRoom() {},
+    initReadSuccess(data) {
+      if (data.success) {
+        this.treeData = data.data;
+        this.isInitData = false;
+      } else {
+        if (data.msg == "请登录") {
+          this.$router.push("/login");
+        }
+      }
+    }
+  },
+  computed: {
+    currentTitle() {
+      return this.$route.meta.title;
+    }
+  },
+  created: function() {
+    this.isInitData = true;
+    Axios({
+      method: "get",
+      url: "/api/InitRead"
+      // headers: { "Content-Type": "application/json;charset=utf-8" }
+    }).then(response => this.initReadSuccess(response.data));
+  }
+};
+
+export default vue;
+</script>
 <template>
   <Layout>
-    <Sider hide-trigger :style="{background: '#fff',minHeight: '990px'}">
-      <Menu theme="light" width="auto" :open-names="['1']">
+    
+    <Sider hide-trigger :style="{background: '#fff',minHeight: '990px',minWidth:'300px'}">
+      <Menu theme="light" width="auto" >
+        <Spin size="large" fix v-if="isInitData"></Spin>
+
         <!-- 固定菜单院系 -->
         <Submenu name="1">
           <template slot="title">
             <Icon type="ios-navigate"></Icon>院系
           </template>
-          
-                  <MenuItem
-                    :name="'1-'+treeData.departments.lenght"
-                  >
-                  
-                  <Button :style="{width: '100%'}" @click.stop="null" type="dashed">+</Button>
-                  
-                  </MenuItem>
+
+          <MenuItem :name="'1--1'">
+            <Button :style="{width: '100%'}" @click.stop="addDepartment" type="dashed">+</Button>
+          </MenuItem>
 
           <template v-for="(depa,index) in treeData.departments">
             <Submenu :key="[depa,index]" :name="'1-'+index">
@@ -42,6 +87,9 @@
                   <Icon type="ios-navigate"></Icon>班级
                 </template>
 
+                <MenuItem :name="'1-'+index+'-1--1'">
+                  <Button :style="{width: '100%'}" @click.stop="addClazz" type="dashed">+</Button>
+                </MenuItem>
                 <template v-for="(clazz,index1) in depa.clazzs">
                   <MenuItem
                     :key="[clazz,index1]"
@@ -56,6 +104,9 @@
                   <Icon type="ios-navigate"></Icon>课程
                 </template>
 
+                <MenuItem :name="'1-'+index+'-2--1'">
+                  <Button :style="{width: '100%'}" @click.stop="addCourse" type="dashed">+</Button>
+                </MenuItem>
                 <template v-for="(course,index2) in depa.courses">
                   <MenuItem
                     :key="[course,index2]"
@@ -70,6 +121,9 @@
                   <Icon type="ios-navigate"></Icon>教师
                 </template>
 
+                <MenuItem :name="'1-'+index+'-3--1'">
+                  <Button :style="{width: '100%'}" @click.stop="addTeache" type="dashed">+</Button>
+                </MenuItem>
                 <template v-for="(teache,index3) in depa.teaches">
                   <MenuItem
                     :key="[teache,index3]"
@@ -79,7 +133,6 @@
               </Submenu>
             </Submenu>
           </template>
-          
         </Submenu>
 
         <!-- 固定菜单校区 -->
@@ -88,19 +141,30 @@
             <Icon type="ios-analytics"></Icon>校区
           </template>
 
+          <MenuItem :name="'2--1'">
+            <Button :style="{width: '100%'}" @click.stop="addArea" type="dashed">+</Button>
+          </MenuItem>
           <template v-for="(area,index) in treeData.areas">
             <Submenu :key="[area,index]" :name="'2-'+index">
               <template slot="title">
-                <Icon type="ios-navigate"></Icon>
+                <Icon type="ios-analytics"></Icon>
                 {{area.areaname}}
               </template>
+
+              <MenuItem :name="'2-'+index+'--1'">
+                <Button :style="{width: '100%'}" @click.stop="addBuiding" type="dashed">+</Button>
+              </MenuItem>
 
               <template v-for="(buiding,index2) in area.buidings">
                 <Submenu :key="[buiding,index2]" :name="'2-'+index+'-'+index2">
                   <template slot="title">
-                    <Icon type="ios-navigate"></Icon>
+                    <Icon type="ios-analytics"></Icon>
                     {{buiding.buidingname}}
                   </template>
+
+                  <MenuItem :name="'2-'+index+'-'+index2+'--1'">
+                    <Button :style="{width: '100%'}" @click.stop="addRoom" type="dashed">+</Button>
+                  </MenuItem>
 
                   <template v-for="(room,index3) in buiding.rooms">
                     <MenuItem
@@ -118,95 +182,8 @@
     <Layout :style="{padding: '0 24px 24px'}">
       <h1 :style="{margin:'20px 20px'}">{{currentTitle}}</h1>
       <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
-        {{ getTreeData}}
         <router-view/>
       </Content>
     </Layout>
   </Layout>
 </template>
-
-<script>
-import Axios from "axios";
-export default {
-  data() {
-    return {
-      users: "",
-      treeData: {
-        departments: [
-          {
-            departmentname: "软件工程系",
-            departmentid: "1",
-            clazzs: [
-              {
-                clazzname: "java"
-              }
-            ],
-            courses: [
-              {
-                courseid: "jj",
-                coursename: "jkjl"
-              }
-            ],
-            teaches: [
-              {
-                teachename: "jlkj",
-                teacheid: "234"
-              }
-            ]
-          }
-        ],
-        areas: [
-          {
-            areaname: "集美校区",
-            areaid: "1",
-            buidings: [
-              {
-                buidingname: "1号楼",
-                buidingid: "1",
-                rooms: [
-                  {
-                    roomid: "23",
-                    romnumber: "202"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    };
-  },
-  computed: {
-    currentTitle() {
-      return this.$route.meta.title;
-    },
-    BreadcrumbItemList() {
-      var pathList = this.$route.path.split("/");
-      var result = [];
-      pathList.forEach(element => {
-        if (element && element.length != 0) {
-          result.push(element);
-        }
-      });
-      return result;
-    },
-    getTreeData() {
-      var rr = {
-        username:"aaa"
-      };
-      var readData=JSON.stringify(rr)
-      Axios({
-        method: "get",
-        url: "/api/InitRead",
-        headers: {"Content-Type": "application/json;charset=utf-8"},
-        responseType: "json"
-      })
-        .then(response => (this.treeData = response.data))
-        .catch(function(error) {
-          // 请求失败处理
-          console.log(error);
-        });
-    }
-  }
-};
-</script>

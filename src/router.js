@@ -8,6 +8,7 @@ import self from './views/self'
 import resources from './views/resources'
 import find404 from './views/find404'
 import login from './views/login'
+import Cookie from 'js-cookie'
 
 Vue.use(Router)
 
@@ -18,11 +19,11 @@ var router = new Router({
       redirect: '/home'
     },
     {
-      path:'/login',
-      component:login,
-      name:'login',
-      meta:{
-        title:'登录'
+      path: '/login',
+      component: login,
+      name: 'login',
+      meta: {
+        title: '登录'
       }
     },
     {
@@ -89,6 +90,14 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = "自动排课 • " + to.meta.title
   }
+  if (to.path != '/login') {
+
+    var username = Cookie.get("username");
+    if (username == "null" || username == null || username.length <= 0) {
+      next('/login')
+    }
+  }
   next()
+
 })
 export default router

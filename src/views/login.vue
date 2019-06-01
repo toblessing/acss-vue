@@ -26,8 +26,7 @@
 
 <script>
 import Axios from "axios";
-import { truncate } from "fs";
-import { isIP } from "net";
+import Cookie from 'js-cookie'
 
 export default {
   data() {
@@ -57,12 +56,7 @@ export default {
           }),
           headers: { "Content-Type": "application/json;charset=utf-8" },
           responseType: "json"
-        })
-          .then(result => this.loginSuccess(result.data))
-          .catch(function(error) {
-            // 请求失败处理
-            console.log(error);
-          });
+        }).then(result => this.loginSuccess(result.data));
       }
     },
     register() {
@@ -87,13 +81,11 @@ export default {
             data: JSON.stringify({
               username: this.username,
               password: this.password,
-              school:this.school
+              school: this.school
             }),
             headers: { "Content-Type": "application/json;charset=utf-8" },
             responseType: "json"
-          })
-            .then(response => this.registerSucess(response.data))
-            .catch(error => this.error(errpr));
+          }).then(response => this.registerSucess(response.data));
         }
       } else {
         this.title = "自动排课系统注册";
@@ -107,12 +99,18 @@ export default {
         this.success(data.msg);
       } else {
         this.error(data.msg);
+        
       }
     },
     loginSuccess(data) {
       this.spinShow = false;
       if (data.success) {
+        this.success(data.msg);
+        Cookie.set('username',data.data.username, { expires: 1/3 });
+        Cookie.set('id',data.data.id, { expires: 1/3 });
         this.$router.push("/home");
+      } else {
+        this.error(data.msg);
       }
     },
     success(msg) {
@@ -136,7 +134,7 @@ export default {
   <div class="item-center-h" style="height:1000px">
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="item-center-vh" style="height:1000px">
-      <Card shadow="true" id="card">
+      <Card shadow id="card">
         <div class="item-center-vh">
           <h1 class="title">{{title}}</h1>
         </div>
